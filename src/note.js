@@ -4,10 +4,10 @@ import { View, Text, StyleSheet, Platform } from "react-native";
 export default class Note extends PureComponent {
   render() {
     return (
-      <View style={style.note}>
-        <Text style={style.name}>{this.props.name[0]}</Text>
-        <Text style={style.octave}>{this.props.octave}</Text>
-        <Text style={style.sharp}>{this.props.name[1]}</Text>
+      <View style={[style.note, this.props.style]}>
+        <Text style={[style.name, this.props.nameStyle]}>{this.props.name[0]}</Text>
+        <Text style={[style.octave, this.props.octaveStyle]}>{this.props.octave}</Text>
+        <Text style={[style.sharp, this.props.octaveStyle]}>{this.props.name[1]}</Text>
       </View>
     );
   }

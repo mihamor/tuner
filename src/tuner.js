@@ -3,6 +3,9 @@ import Voice from '@react-native-voice/voice';
 
 import PitchFinder from "pitchfinder";
 
+const diff = (diffMe, diffBy) => diffMe.split(diffBy).join('')
+
+
 export default class Tuner {
   middleA = 440;
   semitone = 69;
@@ -21,6 +24,8 @@ export default class Tuner {
     "B",
   ];
 
+
+
   constructor(sampleRate = 22050, bufferSize = 2048) {
     this.sampleRate = sampleRate;
     this.bufferSize = bufferSize;
@@ -29,26 +34,76 @@ export default class Tuner {
     Voice.onSpeechStart = this.onSpeechStartHandler.bind(this);
     Voice.onSpeechEnd = this.onSpeechEndHandler.bind(this);
     Voice.onSpeechResults = this.onSpeechResultsHandler.bind(this);
+    Voice.onSpeechPartialResults = this.onSpeechPartialResults.bind(this);
+
+    this.startRecognizing = this.startRecognizing.bind(this);
+    this.stopRecognizing = this.stopRecognizing.bind(this);
+
 
   }
 
-  onSpeechStartHandler() {
+  
+
+  startRecognizing = async () => {
+    
+    try {
+      await Voice.start('en-US');
+    } catch (e) {
+      //eslint-disable-next-line
+      console.error(e);
+    }
+  };
+
+  stopRecognizing = async () => {
+    try {
+      await Voice.stop();
+    } catch (e) {
+      //eslint-disable-next-line
+      console.error(e);
+    }
+  };
+
+  cancelRecognizing = async () => {
+    try {
+      await Voice.cancel();
+    } catch (e) {
+      //eslint-disable-next-line
+      console.error(e);
+    }
+  };
+
+  destroyRecognizer = async () => {
+    try {
+      await Voice.destroy();
+    } catch (e) {
+      //eslint-disable-next-line
+      console.error(e);
+    }
+  };
+  
+  
+  
+  
+
+  onSpeechStartHandler(event) {
+    console.log(event);
 
   }
 
-  onSpeechEndHandler() {
-
+  onSpeechEndHandler(event) {
+    console.log(event)
   }
 
-  onSpeechResultsHandler() {
-
+  onSpeechResultsHandler(data) {
+    this.onRecogn(data);
+  }
+  onSpeechPartialResults(data) {
   }
 
   start() {
-    // Voice.start('en-US');
     Recording.init({
-      sampleRate: this.sampleRate,
-      bufferSize: this.bufferSize,
+    sampleRate: this.sampleRate,
+    bufferSize: this.bufferSize,
     });
     Recording.start();
     Recording.addRecordingEventListener((data) => {
